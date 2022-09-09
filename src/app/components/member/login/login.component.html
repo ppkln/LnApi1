@@ -1,0 +1,38 @@
+
+<div class="contaianer mt-2">
+  <div class="row">
+    <div class="col-md-8 mx-auto">
+      <div class="card">
+        <h1 class="text-center">Login</h1>
+        <div class="card-body">
+          <form #loginFrm="ngForm" novalidate>
+            <div class="form-group">
+                <label for="">e-mail : </label>
+                <input type="email" class="form-control" name="email" id="email" #email="ngModel" ngModel required >
+            </div>
+            <div *ngIf="email.errors && (email.dirty || email.touched) " class="text-danger">
+              <div class="mt-2" [hidden]="!email.errors">
+                กรุณากรอกข้อมูลรูปแบบ E-mail ให้ถูกต้อง เช่น email@ab.co
+              </div>
+            </div>
+            <div class="form-group mt-2">
+              <label for="pws">Password : </label>
+              <input type="password" class="form-control someInput" size="8" placeholder="Password" name="pws" id="pws" #pws="ngModel" ngModel required minlength="6" maxlength="20">
+            </div>
+            <div *ngIf="pws.errors && (pws.dirty || pws.touched)" class="text-danger">
+              <div [hidden]="!pws.errors['minlength']">
+                  กรุณากรอกข้อมูล Password อย่างน้อย 6 ตัวอักษรและไม่เกิน 20 ตัวอักษร
+              </div>
+            </div>
+            <div style="margin-top:.5rem"><input type="checkbox" onclick="togglePassword()" id="chkpws" name="chkpws"> แสดงรหัสผ่าน (Show Password)</div>
+            <div class="form-group text-center">
+              <a href="/" class="btn btn-secondary mt-2 me-2">กลับหน้าหลัก</a>
+              <button type="submit" class="btn btn-primary mt-2 me-2" [disabled]="!loginFrm.form.valid">Login</button>
+            </div>
+          <br>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

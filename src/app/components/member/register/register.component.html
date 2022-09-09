@@ -1,0 +1,68 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 mx-auto">
+      <div class="card">
+        <div class="card-body">
+          <form #registFrm="ngForm" (ngSubmit)="onSubmit(registFrm.value)"  novalidate>
+            <div class="form-group">
+              <label for="idMem">เลขที่ประจำตัวประชาชน 13 หลัก : <font color="red">(ต้องระบุ)</font></label>
+              <input type="text" class="form-control" name="idMem" id="idMem" pattern="^([1-9]{1,1})([0-9,]{12,}$)" placeholder="รหัสสมาชิก(เลขประจำตัวประชาชน)" #idMem="ngModel" ngModel required minlength="13" maxlength="13">
+            </div>
+            <div *ngIf="idMem.errors && (idMem.dirty || idMem.touched) " class="text-danger">
+              <div class="mt-2" [hidden]="!idMem.errors['pattern'] && !idMem.errors['minlength']">
+                กรุณากรอกข้อมูล ให้ถูกต้อง ตามรูปแบบของเลขประจำตัวประชาชน 13 หลัก
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="idMem">e-mail : <font color="red">(ต้องระบุ)</font></label>
+              <input type="email" class="form-control" name="email" id="email" placeholder="e-mail" #email="ngModel" ngModel email required >
+            </div>
+            <div *ngIf="email.errors && (email.dirty || email.touched) " class="text-danger">
+              <div class="mt-2" [hidden]="!email.errors">
+                กรุณากรอกข้อมูลรูปแบบ E-mail ให้ถูกต้อง เช่น email@ab.co
+              </div>
+            </div>
+
+            <div class="form-group mt-2">
+              <label for="pws">Password : <font color="red">(ต้องระบุ)</font></label>
+              <input type="password" class="form-control someInput" placeholder="Password" name="pws" id="pws" #pws="ngModel" ngModel required minlength="6" maxlength="20">
+            </div>
+            <div *ngIf="pws.errors && (pws.dirty || pws.touched)" class="text-danger">
+              <div [hidden]="!pws.errors['minlength']">
+                  กรุณากรอกข้อมูล Password อย่างน้อย 6 ตัวอักษรและไม่เกิน 20 ตัวอักษร
+              </div>
+            </div>
+            <div class="form-group mt-2">
+              <label for="cf_pws">Confirm Password : <font color="red">(ต้องระบุ)</font></label>
+              <input type="password" class="form-control someInput" placeholder="Confirm Password" name="cf_pws" id="cf_pws" #cf_pws="ngModel" ngModel required minlength="6" maxlength="20">
+            </div>
+            <div *ngIf="cf_pws.errors && (cf_pws.dirty || cf_pws.touched)" class="text-danger">
+              <div [hidden]="!cf_pws.errors['minlength']">
+                  กรุณากรอกข้อมูล Confirm Password อย่างน้อย 6 ตัวอักษรและไม่เกิน 20 ตัวอักษร
+              </div>
+            </div>
+           <div style="margin-top:.5rem"><input type="checkbox" onclick="togglePassword()" id="chkpws" name="chkpws"> แสดงรหัสผ่าน (Show Password)</div>
+
+            <div class="form-group mt-2">
+                <label for="fname">ชื่อ - นามสกุล : <font color="red">(ต้องระบุ)</font></label>
+                <input type="text" class="form-control" pattern="^[ก-๏A-Za-z ]{5,}$" placeholder="ชื่อ" name="fname" id="fname" #fname="ngModel" ngModel required minlength="5" maxlength="100">
+            <div *ngIf="fname.errors && (fname.dirty || fname.touched) " class="text-danger">
+                <div class="mt-2" [hidden]="!fname.errors['pattern'] && !fname.errors['minlength']">
+                    กรุณากรอกข้อมูล ชื่อ - นามสกุล ด้วยตัวอักษร ก-ฮ หรืออักษร a-Z เท่านั้น และมีจำนวนไม่น้อยกว่า 5 ตัวอักษรแต่ไม่เกิน 100 ตัวอักษร
+                </div>
+            </div>
+            </div>
+
+
+            <div class="form-group text-center">
+              <a href="/" class="btn btn-secondary mt-2 me-2">กลับหน้าหลัก</a>
+              <button type="submit" class="btn btn-success mt-2 me-2" [disabled]="!registFrm.form.valid">สมัครสมาชิก</button>
+            </div>
+          <br>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

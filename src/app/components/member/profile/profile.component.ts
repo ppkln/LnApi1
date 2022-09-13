@@ -18,10 +18,12 @@ export class ProfileComponent implements OnInit {
     private crudService:CrudService) { }
 
   ngOnInit(): void {
-    let email1 = this.activatedRoute.snapshot.paramMap.get('email');
+    try{
+      let email1 = this.activatedRoute.snapshot.paramMap.get('email');
     console.log('ค่า email ที่ส่งเข้า ngOnInit หน้า Profile.component = '+email1);
     this.crudService.getProfile(email1).subscribe((res)=>{
       console.log('ค่า res ที่ผ่าน crudService.getProfile(email1) = '+JSON.stringify(res));
+      console.log('ค่า res.isLoggedIn ที่ผ่าน crudService.getProfile(email1) = '+JSON.stringify(res.isLoggedIn));
       if(res.isLoggedIn ===true){
         this.userEmail = JSON.parse(res.email);
         this.idMemOld = JSON.parse(res.idMem);
@@ -31,6 +33,10 @@ export class ProfileComponent implements OnInit {
         window.location.replace("/");
       }
     })
+    } catch(error){
+      localStorage.removeItem('token');
+        window.location.replace("/");
+    }
   }
 
   logout(){

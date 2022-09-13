@@ -98,22 +98,26 @@ body('email','E-mail is not empty').trim().not().isEmpty()]
 
 //********* getProfile ******************/
 backendRoute.get('/profile/:email',authen,(req,res,next)=>{
-  console.log('ค่า req.params.email = '+req.params.email);
-  let email= JSON.stringify(req.params.email);
-  dbConnection.execute('SELECT * FROM members WHERE email=?',[email])
-  .then(([rows])=>{
-    if(rows.length > 0){
-      console.log('ค่า rows[0].email (backendRoute.get(profile/:email)) = '+rows[0].email);
-      res.status(200).json({idMem:rows[0].idMem,email:rows[0].email,fname:rows[0].fname,isLoggedIn:true});
-    } else {
-      console.log('ค่า rows[0].email (backendRoute.get(profile/:email)) = หาไม่พบในตารางข้อมูล ');
+  try{
+    console.log('ค่า req.params.email = '+req.params.email);
+    let email= JSON.stringify(req.params.email);
+    dbConnection.execute('SELECT * FROM members WHERE email=?',[email])
+    .then(([rows])=>{
+      if(rows.length > 0){
+        console.log('ค่า rows[0].email (backendRoute.get(profile/:email)) = '+rows[0].email);
+        res.status(200).json({idMem:rows[0].idMem,email:rows[0].email,fname:rows[0].fname,isLoggedIn:true});
+      } else {
+        console.log('ค่า rows[0].email (backendRoute.get(profile/:email)) = หาไม่พบในตารางข้อมูล ');
+        res.status(200).json({idMem:'',email:'',fname:'',isLoggedIn:false});
+      }
+    })
+    .catch(err=>{
       res.status(200).json({idMem:'',email:'',fname:'',isLoggedIn:false});
-    }
-  })
-  .catch(err=>{
+    })
 
-  })
-
+  } catch(error){
+    res.status(200).json({idMem:'',email:'',fname:'',isLoggedIn:false});
+  }
 })
 
 //********* end getProfile **************/

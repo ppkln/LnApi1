@@ -106,6 +106,7 @@ getProfile(data:any): Observable<any>{
       errorMessage ='ฟังก์ชัน handleError แจ้งว่าเกิด Server Error code คือรหัส '+error.status+'\n ข้อความ error คือ : ' +error.message;
     }
     console.log(errorMessage);
+    localStorage.removeItem('token');
     return throwError(errorMessage);
   }
 

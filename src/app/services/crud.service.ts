@@ -23,8 +23,8 @@ export class CrudService {
   constructor(private httpClient:HttpClient,
     private ngZone:NgZone,
     private router:Router) {
-      this.tokenStorage = localStorage.getItem('token');
-      console.log('tokenDecode in constructor = '+this.tokenDecode);
+      // this.tokenStorage = localStorage.getItem('token');
+      // console.log('tokenDecode in constructor = '+this.tokenStorage );
      }
 
   ngOnInit(): void {
@@ -50,25 +50,50 @@ export class CrudService {
   }
 
   Login(data:any): Observable<any>{
-    this.httpHeaders = new HttpHeaders()
-          .set('content-type', 'application/json')
-          .set('authorization', 'bearer '+this.tokenStorage);// กำหนดค่า headers ที่แนบไปกับ httpRequest
+    // this.httpHeaders = new HttpHeaders()
+    //       .set('content-type', 'application/json')
+    //       .set('authorization', 'bearer '+this.tokenStorage);// กำหนดค่า headers ที่แนบไปกับ httpRequest
 
     console.log('Data (อยู่ใน crud-Login) = '+data)
     let API_URL = this.REST_API+'/login';
-    return this.httpClient.post(API_URL,data,{headers:this.httpHeaders})
-    .pipe(map((res:any)=>{
-        console.log('ผลลัพท์ของ token ที่ได้จากการ login (backEnd-api-login) = '+res.token);
-        localStorage.setItem('token',res.token);// จัดเก็บ token ลงใน localstorage ของ browser
+    return this.httpClient.post(API_URL,data)
+    .pipe(map(async (res:any)=>{
+      if(res.isLoggedIn === true){
+        console.log('ค่า res.email (ส่งมาจาก backend-login) = '+res.email);
+        await localStorage.setItem('token',res.token);// จัดเก็บ token ลงใน localstorage ของ browser
         this.tokenDecode = this.jwtService.decodeToken(res.token); // decode token เพื่อให้อ่านค่าภายในได้สะดวก
-        console.log('ทำการ decode Token แสดง levelWork  (ผลลัพท์จาก backEnd-api-login) = '+this.tokenDecode.levelWork);// decode เพื่อแสดงข้อมูล levelWork ที่เก็บไว้ใน token
-        // this.userProfile.next(this.tokenDecode);
-        return res || {}
+        console.log('ค่า tokenDecode.email = '+this.tokenDecode.email);
+        console.log('ค่า res.email (กำลังอยู่ใน crudservice-login) = '+res.email);
+        return res;
+      } else {
+        return {};
+      }
     }),catchError(this.handleError)
     )
   }
 
+getProfile(data:any): Observable<any>{
+  this.tokenStorage = localStorage.getItem('token');
+  this.httpHeaders = new HttpHeaders()
+          .set('content-type', 'application/json')
+          .set('authorization', 'bearer '+this.tokenStorage);// กำหนดค่า headers ที่แนบไปกับ httpRequest
 
+          console.log('ค่า token ที่เก็บอยู่ใน storage = '+this.tokenStorage);
+          console.log('ค่า parameter data ที่ส่งเข้ามาใน (getProfile(data)) = '+data);
+          let API_URL = this.REST_API+'/profile/'+data;
+          return this.httpClient.get(API_URL,{headers:this.httpHeaders})
+          .pipe(map((res:any)=>{
+            console.log('ค่า res ที่ส่งคืนมาจาก backend-profile-email(กำลังอยู่ที่ crud-getProfile) = '+res.email);
+            if(res.isLoggedIn ===true){
+              return res;
+            } else {
+              localStorage.removeItem('token');
+              return {};
+            }
+
+          }),catchError(this.handleError)
+          )
+}
 
   //handle Error
   handleError(error:HttpErrorResponse){

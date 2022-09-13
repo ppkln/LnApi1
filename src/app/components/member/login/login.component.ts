@@ -1,3 +1,4 @@
+import { JsonPipe } from '@angular/common';
 import { Component, OnInit, NgZone } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -25,14 +26,20 @@ export class LoginComponent implements OnInit {
       email:loginFrm.email,
       pws:loginFrm.pws
     }
-    this.crudservice.Login(this.dataFrm).subscribe(null,(err)=>{
-      let reid='';
-      window.alert('Login ไม่สำเร็จ');
-      this.ngZone.run(()=>{this.router.navigateByUrl('/login/'+reid)});
-    },()=>{
-      let reid='';
-      window.alert('Login ไม่สำเร็จ');
-      this.ngZone.run(()=>{this.router.navigateByUrl('/login/'+reid)});
-    })
+    this.crudservice.Login(this.dataFrm).subscribe({
+      next: () => {
+      },
+      error: (err)=>{
+        let reEmail='';
+        window.alert('Login ไม่สำเร็จ');
+        this.ngZone.run(()=>{this.router.navigateByUrl('/login/'+reEmail)});
+      },
+      complete: ()=>{
+        let email=this.dataFrm.email;
+        console.log('ค่า email (ตอนนี้อยู่ที่ login.component) ='+email);
+        window.alert('Login สำเร็จ');
+        this.ngZone.run(()=>{this.router.navigateByUrl('/profile/'+email)});
+      }
+  })
   }
 }

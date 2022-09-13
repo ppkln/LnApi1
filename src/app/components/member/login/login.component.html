@@ -5,10 +5,10 @@
       <div class="card">
         <h1 class="text-center">Login</h1>
         <div class="card-body">
-          <form #loginFrm="ngForm" novalidate>
+          <form #loginFrm="ngForm" (ngSubmit)="onLogin(loginFrm.value)" novalidate>
             <div class="form-group">
                 <label for="">e-mail : </label>
-                <input type="email" class="form-control" name="email" id="email" #email="ngModel" ngModel required >
+                <input type="email" class="form-control" placeholder="e-mail" name="email" id="email" #email="ngModel" ngModel required >
             </div>
             <div *ngIf="email.errors && (email.dirty || email.touched) " class="text-danger">
               <div class="mt-2" [hidden]="!email.errors">

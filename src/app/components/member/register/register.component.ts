@@ -43,30 +43,6 @@ export class RegisterComponent implements OnInit {
         }
     })
 
-      // this.crudservice.Register(this.dataFrm).subscribe((err)=>{
-      //     let reid='';
-      //     window.alert('สมัครสมาชิกไม่สำเร็จ');
-      //     this.ngZone.run(()=>{this.router.navigateByUrl('/register/'+reid)});
-      //   },()=>{
-      //     window.alert('สมัครสมาชิกสำเร็จ (Successfully)');
-      //     this.ngZone.run(()=>{this.router.navigateByUrl('/login')});
-      //   })
-
-
-      //************** */
-      // this.formData.append('idMem',registFrm.idMem);
-      // this.formData.append('email',registFrm.email);
-      // this.formData.append('pws',registFrm.pws);
-      // this.formData.append('fname',registFrm.fname);
-      // console.log('formData.email (อยู่ในonSubmit) = '+this.formData.get('email'))
-      // this.crudservice.Register(this.formData).subscribe(null,(err)=>{
-      //   let reid='';
-      //   window.alert('สมัครสมาชิกไม่สำเร็จ');
-      //   this.ngZone.run(()=>{this.router.navigateByUrl('/register/'+reid)});
-      // },()=>{
-      //   window.alert('สมัครสมาชิกสำเร็จ (Successfully)');
-      //   this.ngZone.run(()=>{this.router.navigateByUrl('/login')});
-      // })
       //************ */
 
     } else{

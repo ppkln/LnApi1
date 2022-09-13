@@ -9,7 +9,7 @@ module.exports = (req,res,next)=>{
       console.log('ค่า token ที่ผ่านการ split แล้ว (ไฟล์ auth) = '+token);
       if(token !== null){
         const decode = jwt.verify(token,secretkeyln);
-        console.log('ค่า decode ที่ผ่านการ jwt.Verify แล้ว (ไฟล์ auth) = '+decode.email);
+        console.log('ค่า decode ที่ผ่านการ jwt.Verify แล้ว (ไฟล์ auth) = '+JSON.parse(decode.email));
         if(decode){
           next();
         } else {
@@ -17,11 +17,14 @@ module.exports = (req,res,next)=>{
         }
       } else {
         res.status(200).json({idMem:'',email:'',fname:''});
+        return;
       }
     } else {
       res.status(200).json({idMem:'',email:'',fname:''});
+      return;
     }
   } catch(error){
-    res.status(500).json({status:'error',message:'token ไม่ผ่าน'});
+    res.status(500).json({status:'error',message:'token ไม่ผ่าน (ข้อความจากไฟล์ auth.js)'});
+    return ;
   }
 }

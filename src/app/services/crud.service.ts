@@ -83,11 +83,11 @@ getProfile(data:any): Observable<any>{
           let API_URL = this.REST_API+'/profile/'+data;
           return this.httpClient.get(API_URL,{headers:this.httpHeaders})
           .pipe(map((res:any)=>{
-            console.log('ค่า res ที่ส่งคืนมาจาก backend-profile-email(กำลังอยู่ที่ crud-getProfile) = '+res.email);
             if(res.isLoggedIn ===true){
               return res;
             } else {
               localStorage.removeItem('token');
+              window.location.replace("/");
               return {};
             }
 

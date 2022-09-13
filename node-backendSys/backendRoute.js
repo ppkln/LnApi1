@@ -107,7 +107,7 @@ backendRoute.get('/profile/:email',authen,(req,res,next)=>{
         console.log('ค่า rows[0].email (backendRoute.get(profile/:email)) = '+rows[0].email);
         res.status(200).json({idMem:rows[0].idMem,email:rows[0].email,fname:rows[0].fname,isLoggedIn:true});
       } else {
-        console.log('ค่า rows[0].email (backendRoute.get(profile/:email)) = หาไม่พบในตารางข้อมูล ');
+        console.log('ค่า rows[0].email (backendRoute.get(profile/:email)) = หา email นี้ไม่พบในตารางข้อมูล ');
         res.status(200).json({idMem:'',email:'',fname:'',isLoggedIn:false});
       }
     })

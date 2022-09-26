@@ -31,12 +31,11 @@ export class LoginComponent implements OnInit {
       },
       error: (err)=>{
         let reEmail='';
-        window.alert('Login ไม่สำเร็จ');
+        window.alert('กรุณา Login อีกครั้ง');
         this.ngZone.run(()=>{this.router.navigateByUrl('/login/'+reEmail)});
       },
       complete: ()=>{
         let email=this.dataFrm.email;
-        console.log('ค่า email (ตอนนี้อยู่ที่ login.component) ='+email);
         window.alert('Login สำเร็จ');
         this.ngZone.run(()=>{this.router.navigateByUrl('/profile/'+email)});
       }

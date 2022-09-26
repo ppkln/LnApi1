@@ -9,13 +9,17 @@ import { AppComponent } from './app.component';
 import { RegisterComponent } from './components/member/register/register.component';
 import { ProfileComponent } from './components/member/profile/profile.component';
 import { LoginComponent } from './components/member/login/login.component';
+import { MemberListComponent } from './components/member/member-list/member-list.component';
+import { PagenofoundComponent } from './pagenofound/pagenofound.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RegisterComponent,
     ProfileComponent,
-    LoginComponent
+    LoginComponent,
+    MemberListComponent,
+    PagenofoundComponent
   ],
   imports: [
     BrowserModule,

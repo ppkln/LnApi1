@@ -23,8 +23,6 @@ export class CrudService {
   constructor(private httpClient:HttpClient,
     private ngZone:NgZone,
     private router:Router) {
-      // this.tokenStorage = localStorage.getItem('token');
-      // console.log('tokenDecode in constructor = '+this.tokenStorage );
      }
 
   ngOnInit(): void {
@@ -32,11 +30,7 @@ export class CrudService {
   }
 
   Register(data:any): Observable<any>{
-    // this.httpHeaders = new HttpHeaders()
-    //       .set('content-type', 'application/json')
-    //       .set('authorization', 'bearer '+this.tokendetail);// กำหนดค่า headers ที่แนบไปกับ httpRequest
-
-    console.log('Data.pws (อยู่ใน crud-register) = '+data.pws)
+    console.log('Data.email (อยู่ใน crud-register) = '+data.email)
     let API_URL = this.REST_API+'/register';
     return this.httpClient.post(API_URL,data)
     .pipe(map((res:any)=>{
@@ -50,20 +44,16 @@ export class CrudService {
   }
 
   Login(data:any): Observable<any>{
-    // this.httpHeaders = new HttpHeaders()
-    //       .set('content-type', 'application/json')
-    //       .set('authorization', 'bearer '+this.tokenStorage);// กำหนดค่า headers ที่แนบไปกับ httpRequest
-
     console.log('Data (อยู่ใน crud-Login) = '+data)
     let API_URL = this.REST_API+'/login';
     return this.httpClient.post(API_URL,data)
     .pipe(map(async (res:any)=>{
       if(res.isLoggedIn === true){
-        console.log('ค่า res.email (ส่งมาจาก backend-login) = '+res.email);
+        // console.log('ค่า res.email (ส่งมาจาก backend-login) = '+res.email);
         await localStorage.setItem('token',res.token);// จัดเก็บ token ลงใน localstorage ของ browser
         this.tokenDecode = this.jwtService.decodeToken(res.token); // decode token เพื่อให้อ่านค่าภายในได้สะดวก
-        console.log('ค่า tokenDecode.email = '+this.tokenDecode.email);
-        console.log('ค่า res.email (กำลังอยู่ใน crudservice-login) = '+res.email);
+        // console.log('ค่า tokenDecode.email = '+this.tokenDecode.email);
+        // console.log('ค่า res.email (กำลังอยู่ใน crudservice-login) = '+res.email);
         return res;
       } else {
         return {};
@@ -78,13 +68,36 @@ getProfile(data:any): Observable<any>{
           .set('content-type', 'application/json')
           .set('authorization', 'bearer '+this.tokenStorage);// กำหนดค่า headers ที่แนบไปกับ httpRequest
 
-          console.log('ค่า token ที่เก็บอยู่ใน storage = '+this.tokenStorage);
-          console.log('ค่า parameter data ที่ส่งเข้ามาใน (getProfile(data)) = '+data);
+          // console.log('ค่า token ที่เก็บอยู่ใน storage = '+this.tokenStorage);
+          // console.log('ค่า parameter data ที่ส่งเข้ามาใน (getProfile(data)) = '+data);
           let API_URL = this.REST_API+'/profile/'+data;
           return this.httpClient.get(API_URL,{headers:this.httpHeaders})
           .pipe(map((res:any)=>{
             if(res.isLoggedIn ===true){
               return res;
+            } else {
+              localStorage.removeItem('token');
+              window.location.replace("/");
+              return {};
+            }
+
+          }),catchError(this.handleError)
+          )
+}
+
+// ขอข้อมูลรายการสมาชิกทั้งหมดของระบบ (member-list)
+getMemberlist(): Observable<any>{
+  this.tokenStorage = localStorage.getItem('token');
+  this.httpHeaders = new HttpHeaders()
+          .set('content-type', 'application/json')
+          .set('authorization', 'bearer '+this.tokenStorage);// กำหนดค่า headers ที่แนบไปกับ httpRequest
+
+          // console.log('ค่า token ที่เก็บอยู่ใน storage = '+this.tokenStorage);
+          let API_URL = this.REST_API+'/member-list';
+          return this.httpClient.get(API_URL,{headers:this.httpHeaders})
+          .pipe(map((res:any)=>{
+            if(res.isLoggedIn ===true){
+              return res.data;
             } else {
               localStorage.removeItem('token');
               window.location.replace("/");

@@ -30,10 +30,10 @@ body('pws','The password must be minimum length 6 characters').trim().isLength({
   console.log('ค่าของ pws = '+JSON.stringify(req.body.pws));
   if(validation_result.isEmpty()){
     console.log('ผ่าน validation_result.isEmpty แล้ว');
-    const idMem = req.body.idMem;
-    const email = req.body.email;
-    const pws = req.body.pws;
-    const fname = req.body.fname;
+    const idMem = JSON.stringify(req.body.idMem);
+    const email = JSON.stringify(req.body.email);
+    const pws = JSON.stringify(req.body.pws);
+    const fname = JSON.stringify(req.body.fname);
     await bcrypt.hash(pws,10).then((hash_pass)=>{// เข้ารหัส password ก่อนที่จะบันทึกลงในตารางฐานข้อมูล
       dbConnection.execute('INSERT INTO members (idMem,email,pws,fname) VALUES(?,?,?,?)',[idMem,email,hash_pass,fname])
       .then((result)=>{
@@ -129,7 +129,6 @@ backendRoute.get('/member-list',authen,(req,res,next)=>{
     dbConnection.execute('SELECT * FROM members ORDER BY regisdate DESC')
     .then(([rows])=>{
       if(rows.length > 0){
-        console.log('ค่าที่ได้จากการ query mysql (backEnd-member-list) JSON.stringify(rows) = '+JSON.stringify(rows));
         res.status(200).json({data:rows,isLoggedIn:true});
       } else {
         res.status(200).json({data:'',isLoggedIn:false});

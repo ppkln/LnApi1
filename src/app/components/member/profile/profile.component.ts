@@ -23,8 +23,10 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     try{
       this.GToken = localStorage.getItem('token'); // เรียกใช้ token ที่แนบมากับ header ของ browser ได้เลยตรงๆ
+      let tokenshowdetail = this.jwtService.decodeToken(this.GToken);// เป็นการถอดรหัส token ที่เก็บใน locaส storage
+      console.log('ค่า tokenshowdetail.email (profile.component.ts) = '+tokenshowdetail.email);
       if(this.GToken !==null){//ถ้าไม่มีค่า token เก็บใน localstorage จะให้เปลี่ยนไปที่หน้าอื่น
-        let email1 = this.activatedRoute.snapshot.paramMap.get('email');
+        let email1 = tokenshowdetail.email //this.activatedRoute.snapshot.paramMap.get('email');
         this.crudService.getProfile(email1).subscribe((res)=>{
           if(res !==null){
             if(res.isLoggedIn ===true){

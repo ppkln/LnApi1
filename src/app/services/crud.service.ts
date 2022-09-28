@@ -4,7 +4,6 @@ import { BehaviorSubject,catchError,map } from 'rxjs';
 import { Observable,throwError } from 'rxjs';
 import { HttpClient,HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import axios from 'axios';
 
 @Injectable({
   providedIn: 'root'
@@ -60,6 +59,8 @@ export class CrudService {
 getProfile(data:any): Observable<any>{
   this.tokenStorage = localStorage.getItem('token');
   console.log('อยู่ใน crudservice-getProfile แล้ว');
+  this.tokenDecode = this.jwtService.decodeToken(this.tokenStorage); // decode token เพื่อให้อ่านค่าภายในได้สะดวก
+  console.log('ค่าของ this.tokenDecode.email = '+this.tokenDecode.email);
   this.httpHeaders = new HttpHeaders()
           .set('content-type', 'application/json')
           .set('authorization', 'bearer '+this.tokenStorage);// กำหนดค่า headers ที่แนบไปกับ httpRequest

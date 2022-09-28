@@ -11,8 +11,9 @@ import { Router } from '@angular/router';
 export class AppComponent implements OnInit {
   title = 'LnApi1';
   jwtService: JwtHelperService = new JwtHelperService();
-  userProfile:any ;
+  userEmail:any ;
   GToken:any;
+
 
 
   constructor(private crudService: CrudService,
@@ -23,8 +24,8 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.GToken = localStorage.getItem('token'); // เรียกใช้ token ที่แนบมากับ header ของ browser ได้เลยตรงๆ
     let tokenshowdetail = this.jwtService.decodeToken(this.GToken);
-    console.log('ค่า tokenshowdetail.email = '+tokenshowdetail.email);
-    this.userProfile = tokenshowdetail;
+    console.log('ค่า tokenshowdetail.email (app.component.ts) = '+tokenshowdetail.email);
+    this.userEmail = tokenshowdetail.email;
   }
 
 

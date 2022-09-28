@@ -28,10 +28,8 @@ export class LoginComponent implements OnInit {
     }
     this.crudservice.Login(this.dataFrm).subscribe({
       next:(res) => {
-        console.log('ค่า res ที่ส่งมาจาก crudService-login ='+res);
         if(res !== null){
           let email=this.dataFrm.email;
-          console.log('ค่า token ที่จัดเก็บลง Local storage (login.component.ts) = '+localStorage.getItem('token'));
           this.ngZone.run(()=>{this.router.navigateByUrl('/profile/'+email)});
         } else{
           let reEmail='';

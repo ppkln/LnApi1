@@ -22,6 +22,17 @@ app.get('/',(req,res)=>{
 //api root
 app.use('/api',backendRoute);
 
+// for pagination
+const db = require('./modules/paginateMember');
+db.sequelize.sync()
+  .then(() => {
+    console.log("paginateMember working.");
+  })
+  .catch((err) => {
+    console.log("Failed to paginateMember db: " + err.message);
+  });
+
+// config port nodejs server
 const port = process.env.port || 8000 ;
 app.listen(port,()=>{
   console.log("connected to server on port ", port)

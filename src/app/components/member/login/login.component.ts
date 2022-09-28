@@ -27,18 +27,24 @@ export class LoginComponent implements OnInit {
       pws:loginFrm.pws
     }
     this.crudservice.Login(this.dataFrm).subscribe({
-      next: () => {
+      next:(res) => {
+        console.log('ค่า res ที่ส่งมาจาก crudService-login ='+res);
+        if(res !== null){
+          let email=this.dataFrm.email;
+          console.log('ค่า token ที่จัดเก็บลง Local storage (login.component.ts) = '+localStorage.getItem('token'));
+          this.ngZone.run(()=>{this.router.navigateByUrl('/profile/'+email)});
+        } else{
+          let reEmail='';
+          window.alert('กรุณา Login อีกครั้ง');
+          this.ngZone.run(()=>{this.router.navigateByUrl('/login/'+reEmail)});
+        }
       },
       error: (err)=>{
         let reEmail='';
-        window.alert('กรุณา Login อีกครั้ง');
+        window.alert('เกิด error กรุณา Login อีกครั้ง');
         this.ngZone.run(()=>{this.router.navigateByUrl('/login/'+reEmail)});
       },
-      complete: ()=>{
-        let email=this.dataFrm.email;
-        window.alert('Login สำเร็จ');
-        this.ngZone.run(()=>{this.router.navigateByUrl('/profile/'+email)});
-      }
+      complete: ()=>{}
   })
   }
 }

@@ -47,11 +47,14 @@ export class CrudService {
     console.log('Data (อยู่ใน crud-Login) = '+data)
     let API_URL = this.REST_API+'/login';
     return this.httpClient.post(API_URL,data)
-    .pipe(map(async (res:any)=>{
+    .pipe(map((res:any)=>{
       if(res.isLoggedIn === true){
-        await localStorage.setItem('token',res.token);// จัดเก็บ token ลงใน localstorage ของ browser
+        localStorage.setItem('token',res.token);// จัดเก็บ token ลงใน localstorage ของ browser
         this.tokenDecode = this.jwtService.decodeToken(res.token); // decode token เพื่อให้อ่านค่าภายในได้สะดวก
-        return res;
+        console.log('ค่า this.tokenDecode (crudservie-login) = '+JSON.stringify(this.tokenDecode));
+        // console.log('ค่า res ที่ส่งมาจาก backend-login ='+JSON.stringify(res));
+        console.log('ค่า res.email ที่ส่งมาจาก backend-login ='+res.email);
+        return res.email;
       } else {
         return {};
       }
@@ -61,6 +64,8 @@ export class CrudService {
 
 getProfile(data:any): Observable<any>{
   this.tokenStorage = localStorage.getItem('token');
+  console.log('อยู่ใน crudservice-getProfile แล้ว');
+  console.log('ค่า localStorage.getItem(token)-(crudservice-getProfile)= '+this.tokenStorage);
   this.httpHeaders = new HttpHeaders()
           .set('content-type', 'application/json')
           .set('authorization', 'bearer '+this.tokenStorage);// กำหนดค่า headers ที่แนบไปกับ httpRequest
@@ -69,6 +74,7 @@ getProfile(data:any): Observable<any>{
           return this.httpClient.get(API_URL,{headers:this.httpHeaders})
           .pipe(map((res:any)=>{
             if(res.isLoggedIn ===true){
+              console.log('ค่า res.isLoggedIn (ส่งค่าจาก backend-profile) = '+res.isLoggedIn);
               return res;
             } else {
               localStorage.removeItem('token');
@@ -90,6 +96,7 @@ getMemberlist(): Observable<any>{
           let API_URL = this.REST_API+'/member-list';
           return this.httpClient.get(API_URL,{headers:this.httpHeaders})
           .pipe(map((res:any)=>{
+            console.log('ค่า res ที่ส่งมาจาก backend-memberlist ='+JSON.stringify(res));
             if(res.isLoggedIn ===true){
               return res.data;
             } else {

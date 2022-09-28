@@ -11,6 +11,8 @@ import { ProfileComponent } from './components/member/profile/profile.component'
 import { LoginComponent } from './components/member/login/login.component';
 import { MemberListComponent } from './components/member/member-list/member-list.component';
 import { PagenofoundComponent } from './pagenofound/pagenofound.component';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { TestPaginationComponent } from './components/member/test-pagination/test-pagination.component';
 
 @NgModule({
   declarations: [
@@ -19,14 +21,16 @@ import { PagenofoundComponent } from './pagenofound/pagenofound.component';
     ProfileComponent,
     LoginComponent,
     MemberListComponent,
-    PagenofoundComponent
+    PagenofoundComponent,
+    TestPaginationComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxPaginationModule
   ],
   providers: [],
   bootstrap: [AppComponent]

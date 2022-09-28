@@ -25,6 +25,7 @@ export class MemberListComponent implements OnInit {
     // ดึงข้อมูลจากฐานข้อมูลผ่าน api
     this.crudService.getMemberlist().subscribe({
       next:(res)=>{
+        console.log('ค่า res ที่ส่งมาจาก crudService-memberlist ='+JSON.stringify(res));
           this.dataMemberList = res;
       },
       error:(err)=>{

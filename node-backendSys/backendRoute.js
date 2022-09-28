@@ -11,6 +11,10 @@ const authen = require('./auth');
 
 const backendRoute = express.Router();
 
+// Squelize section
+
+// end Squelize section
+
 // **********  Register Member ************//
 backendRoute.post('/register',[body('email','email is not empty').trim().not().isEmpty(),body('email',"invalid E-mail address").isEmail().custom((value)=>{
   return dbConnection.execute('SELECT * FROM members WHERE email =?',[value])
@@ -30,14 +34,13 @@ body('pws','The password must be minimum length 6 characters').trim().isLength({
   console.log('ค่าของ pws = '+JSON.stringify(req.body.pws));
   if(validation_result.isEmpty()){
     console.log('ผ่าน validation_result.isEmpty แล้ว');
-    const idMem = JSON.stringify(req.body.idMem);
-    const email = JSON.stringify(req.body.email);
-    const pws = JSON.stringify(req.body.pws);
-    const fname = JSON.stringify(req.body.fname);
+    const idMem = req.body.idMem;
+    const email = req.body.email;
+    const pws = req.body.pws;
+    const fname = req.body.fname;
     await bcrypt.hash(pws,10).then((hash_pass)=>{// เข้ารหัส password ก่อนที่จะบันทึกลงในตารางฐานข้อมูล
       dbConnection.execute('INSERT INTO members (idMem,email,pws,fname) VALUES(?,?,?,?)',[idMem,email,hash_pass,fname])
       .then((result)=>{
-        console.log('ค่าหลังจากส่งไปบันทึกที่ mysql = '+JSON.stringify(result))
         res.status(201).json({status:'ok',message:'บันทึกข้อมูลสำเร็จ'});
       })
       .catch(err=>{
@@ -58,19 +61,23 @@ body('pws','The password must be minimum length 6 characters').trim().isLength({
 backendRoute.post('/login',[body('pws','Password is not empty').trim().not().isEmpty(),
 body('pws','Password must be minimum length 6 characters').trim().isLength({min:6}),
 body('email','E-mail is not empty').trim().not().isEmpty()]
-,(req,res,next)=>{
+,async (req,res,next)=>{
   console.log('อยู่ใน backend-post-login แล้ว');
   const validation_result = validationResult(req);
+  console.log('ค่า req.body.email = '+req.body.email);
+  console.log('ค่า req.body.pws = '+req.body.pws);
   if(validation_result.isEmpty()){
-    const email = JSON.stringify(req.body.email);
-    const pwsFromuser = JSON.stringify(req.body.pws);
+    const email = req.body.email;
+    const pwsFromuser = req.body.pws;
     if(email !=='' && pwsFromuser !==''){
       dbConnection.execute('SELECT * FROM members WHERE email=?',[email])
       .then(async ([rows])=>{
         if(rows.length > 0){
           const hash_db = rows[0].pws;
+          console.log('ค่า rows[0].pws = '+rows[0].pws);
           let result_hash= await bcrypt.compare(pwsFromuser,hash_db)
-          if(result_hash === true){
+          console.log('ค่า result_hash = '+result_hash);
+          if(result_hash == true){
             const tokenSign = await jwt.sign({idMem:rows[0].idMem,email:rows[0].email},secretkeyln,{expiresIn:'300s'});//สร้าง token อายุ 5 นาที
             console.log('ค่า token ที่สร้างขึ้น = '+tokenSign);
             res.status(200).json({isLoggedIn:true,email:rows[0].email,token:tokenSign});
@@ -97,10 +104,11 @@ body('email','E-mail is not empty').trim().not().isEmpty()]
 // *********** End Login api *************//
 
 //********* getProfile ******************/
-backendRoute.get('/profile/:email',authen,(req,res,next)=>{
+backendRoute.get('/profile/:email',(req,res,next)=>{
   try{
     console.log('ค่า req.params.email = '+req.params.email);
-    let email= JSON.stringify(req.params.email);
+    console.log('ค่า req.headers.authorization ที่ส่งมาจาก login.cmoponent.ts = '+req.headers.authorization)
+    let email= req.params.email;
     dbConnection.execute('SELECT * FROM members WHERE email=?',[email])
     .then(([rows])=>{
       if(rows.length > 0){
@@ -123,7 +131,7 @@ backendRoute.get('/profile/:email',authen,(req,res,next)=>{
 //********* end getProfile **************/
 
 //********* getMember-List ******************/
-backendRoute.get('/member-list',authen,(req,res,next)=>{
+backendRoute.get('/member-list',(req,res,next)=>{
   try{
     console.log('อยู่ใน backendRoute.get(member-list) แล้ว');
     dbConnection.execute('SELECT * FROM members ORDER BY regisdate DESC')

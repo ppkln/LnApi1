@@ -104,7 +104,7 @@ body('email','E-mail is not empty').trim().not().isEmpty()]
 // *********** End Login api *************//
 
 //********* getProfile ******************/
-backendRoute.get('/profile/:email',(req,res,next)=>{
+backendRoute.get('/profile/:email',authen,(req,res,next)=>{
   try{
     console.log('ค่า req.params.email = '+req.params.email);
     console.log('ค่า req.headers.authorization ที่ส่งมาจาก login.cmoponent.ts = '+req.headers.authorization)
@@ -131,7 +131,7 @@ backendRoute.get('/profile/:email',(req,res,next)=>{
 //********* end getProfile **************/
 
 //********* getMember-List ******************/
-backendRoute.get('/member-list',(req,res,next)=>{
+backendRoute.get('/member-list',authen,(req,res,next)=>{
   try{
     console.log('อยู่ใน backendRoute.get(member-list) แล้ว');
     dbConnection.execute('SELECT * FROM members ORDER BY regisdate DESC')

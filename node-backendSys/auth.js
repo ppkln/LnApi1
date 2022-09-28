@@ -9,20 +9,20 @@ module.exports = (req,res,next)=>{
       console.log('ค่า token ที่ผ่านการ split แล้ว (ไฟล์ auth) = '+token);
       if(token == null){
         console.log('ค่า token == null');
-        res.status(200).json({idMem:'',email:'',fname:''});
+        res.status(200).json({idMem:'',email:'',fname:'',isLoggedIn:false});
         return;
       } else {
         const decode = jwt.verify(token,secretkeyln);
-        console.log('ค่า decode ที่ผ่านการ jwt.Verify แล้ว (ไฟล์ auth) = '+JSON.parse(decode.email));
+        console.log('ค่า decode.email ที่ผ่านการ jwt.Verify แล้ว (ไฟล์ auth) = '+decode.email);
         if(decode){
           console.log('ผ่านการ verify token แล้วยังใช้งานได้');
           next();
         } else {
-          res.status(200).json({idMem:'',email:'',fname:''});
+          res.status(200).json({idMem:'',email:'',fname:'',isLoggedIn:false});
         }
       }
     } else {
-      res.status(200).json({idMem:'',email:'',fname:''});
+      res.status(200).json({idMem:'',email:'',fname:'',isLoggedIn:false});
       return;
     }
   } catch(error){
